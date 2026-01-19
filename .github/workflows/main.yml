@@ -1,0 +1,28 @@
+name: Deploy to EC2
+
+# main 브랜치가 push될때의 트리거 입력
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      - name: Add EC2 to known_hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Run deploy script on EC2
+        run: |
+          # SSH로 접속하여 deploy.sh를 실행합니다.
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            cd ~/workspace/todo-repository
+            ./deploy.sh
+          EOF
