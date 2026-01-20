@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Request, HTTPException
 import mysql.connector
+from services.ai_agent import get_today_todo_summary
 
 app = FastAPI()
 
@@ -51,6 +52,20 @@ def get_todos():
     conn.close()
 
     return [{"id": r[0], "content": r[1], "created_at": str(r[2])} for r in rows]
+
+# Step 3-A: Summary API 엔드포인트 생성 
+@app.get("/todos/summary", status_code=200) # status_code를 명시해봅니다.
+def get_summary_api():
+    """
+    오늘의 할 일 요약을 반환하는 API
+    """
+    try:
+        print("Summary API 호출됨!") # 서버 터미널에 이 글자가 찍히는지 확인용
+        result = get_today_todo_summary()
+        return result
+    except Exception as e:
+        print(f"에러 발생: {e}") # 에러 내용을 터미널에 출력
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.delete("/todos/{todo_id}")
