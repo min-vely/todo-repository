@@ -3,17 +3,13 @@ import sys
 from dotenv import load_dotenv
 from openai import OpenAI
 
-# 현재 파일(ai_agent.py)의 부모(services)의 부모(todo-repository) 경로를 추가
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-sys.path.append(parent_dir)
 
 # 이제 다시 임포트 시도
 try:
-    from main import get_db
+    from database import get_db
 except ImportError:
-    # 혹시 파일명이 main.py가 아닐 경우를 대비
-    print("여전히 main.py를 찾을 수 없습니다. 파일명을 확인하세요.")
+    # 혹시 파일명이 database가 아닐 경우를 대비
+    print("여전히 database를 찾을 수 없습니다. 파일명을 확인하세요.")
 
 # .env 파일 로드
 load_dotenv()

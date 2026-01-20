@@ -5,14 +5,11 @@ from services.ai_agent import get_today_todo_summary
 app = FastAPI()
 
 
-def get_db():
-    return mysql.connector.connect(
-        host="localhost",
-        port=3306,
-        user="tester",
-        password="tester",
-        database="llmagent"
-    )
+try:
+    from database import get_db
+except ImportError:
+    # 혹시 파일명이 database가 아닐 경우를 대비
+    print("여전히 get_db를 찾을 수 없습니다. 파일명을 확인하세요.")
 
 
 @app.post("/todos")
